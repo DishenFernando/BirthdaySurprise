@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './BirthdaySurprise.css';
 
 const BirthdaySurprise = () => {
   const [showCake, setShowCake] = useState(false);
