@@ -5,6 +5,7 @@ const SplashScreen = ({ onFinish }) => {
   const [countdown, setCountdown] = useState(5);
   const [isVisible, setIsVisible] = useState(true);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [showElements, setShowElements] = useState({
     logo: false,
     title: false,
@@ -13,12 +14,20 @@ const SplashScreen = ({ onFinish }) => {
   });
 
   useEffect(() => {
+    // Check if mobile device
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+
     // Staggered element animations
     const timers = [
       setTimeout(() => setShowElements(prev => ({...prev, logo: true})), 200),
       setTimeout(() => setShowElements(prev => ({...prev, title: true})), 400),
       setTimeout(() => setShowElements(prev => ({...prev, text: true})), 600),
-      setTimeout(() => setShowElements(prev => ({...prev, countdown: true})), 800),
+      setTimeout(() => setShowElements(prev => ({...prev, countdown: true}))), 800,
       setTimeout(() => setShowSparkles(true), 500)
     ];
 
@@ -37,11 +46,13 @@ const SplashScreen = ({ onFinish }) => {
     return () => {
       clearInterval(timer);
       timers.forEach(timer => clearTimeout(timer));
+      window.removeEventListener('resize', checkIfMobile);
     };
   }, [onFinish]);
 
   const generateSparkles = () => {
-    return [...Array(25)].map((_, i) => (
+    const count = isMobile ? 15 : 25;
+    return [...Array(count)].map((_, i) => (
       <div
         key={i}
         className={`sparkle sparkle-${i + 1}`}
@@ -50,7 +61,7 @@ const SplashScreen = ({ onFinish }) => {
           top: `${Math.random() * 100}%`,
           animationDelay: `${Math.random() * 2}s`,
           animationDuration: `${1 + Math.random() * 2}s`,
-          fontSize: `${12 + Math.random() * 12}px`,
+          fontSize: isMobile ? `${8 + Math.random() * 8}px` : `${12 + Math.random() * 12}px`,
           opacity: 0.7 + Math.random() * 0.3
         }}
       >
@@ -68,15 +79,17 @@ const SplashScreen = ({ onFinish }) => {
         <div className="bg-layer layer-3"></div>
       </div>
       
-      {/* Floating abstract shapes */}
+      {/* Floating abstract shapes - reduced on mobile */}
       <div className="floating-shapes">
-        {[...Array(8)].map((_, i) => (
+        {[...Array(isMobile ? 5 : 8)].map((_, i) => (
           <div 
             key={i}
             className={`shape shape-${i + 1}`}
             style={{
               animationDuration: `${15 + Math.random() * 10}s`,
-              animationDelay: `${Math.random() * 5}s`
+              animationDelay: `${Math.random() * 5}s`,
+              width: isMobile ? `${100 + Math.random() * 100}px` : `${150 + Math.random() * 150}px`,
+              height: isMobile ? `${100 + Math.random() * 100}px` : `${150 + Math.random() * 150}px`
             }}
           ></div>
         ))}
@@ -128,21 +141,21 @@ const SplashScreen = ({ onFinish }) => {
         {/* Countdown with circular progress */}
         <div className={`countdown-container ${showElements.countdown ? 'show' : ''}`}>
           <div className="countdown-circle">
-            <svg className="progress-ring" width="140" height="140">
+            <svg className="progress-ring" width={isMobile ? "100" : "140"} height={isMobile ? "100" : "140"}>
               <circle
                 className="progress-ring-background"
-                cx="70"
-                cy="70"
-                r="60"
+                cx={isMobile ? "50" : "70"}
+                cy={isMobile ? "50" : "70"}
+                r={isMobile ? "40" : "60"}
               />
               <circle
                 className="progress-ring-progress"
-                cx="70"
-                cy="70"
-                r="60"
+                cx={isMobile ? "50" : "70"}
+                cy={isMobile ? "50" : "70"}
+                r={isMobile ? "40" : "60"}
                 style={{
-                  strokeDasharray: `${2 * Math.PI * 60}`,
-                  strokeDashoffset: `${2 * Math.PI * 60 * (countdown / 5)}`
+                  strokeDasharray: `${2 * Math.PI * (isMobile ? 40 : 60)}`,
+                  strokeDashoffset: `${2 * Math.PI * (isMobile ? 40 : 60) * (countdown / 5)}`
                 }}
               />
             </svg>
@@ -175,7 +188,7 @@ const SplashScreen = ({ onFinish }) => {
             style={{
               animationDuration: `${8 + Math.random() * 10}s`,
               animationDelay: `${Math.random() * 2}s`,
-              fontSize: `${24 + Math.random() * 16}px`
+              fontSize: isMobile ? `${16 + Math.random() * 12}px` : `${24 + Math.random() * 16}px`
             }}
           >
             {emoji}
