@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './BirthdaySurprise.css';
+import happyBirthdaySong from './assets/happy-birthday.mp3';
 
 const BirthdaySurprise = ({ celebrantName, senderName }) => {
   const [showCake, setShowCake] = useState(false);
@@ -8,6 +9,9 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
   const [candlesLit, setCandlesLit] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.7);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     // Check if mobile device
@@ -17,6 +21,11 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
     
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
+
+    // Initialize audio
+    audioRef.current = new Audio(happyBirthdaySong);
+    audioRef.current.loop = false;
+    audioRef.current.volume = volume;
 
     setIsLoaded(true);
     const timer1 = setTimeout(() => setShowCake(true), 800);
@@ -28,8 +37,30 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       clearTimeout(timer2);
       clearTimeout(timer3);
       window.removeEventListener('resize', checkIfMobile);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
+
+  const playBirthdaySong = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.muted = false;
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          audioRef.current.muted = false;
+        })
+        .catch(error => {
+          console.error("Audio playback failed:", error);
+          alert("Please tap again to play the birthday song!");
+        });
+      
+      audioRef.current.onended = () => setIsPlaying(false);
+    }
+  };
 
   const createConfetti = () => {
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a55eea', '#26de81', '#fd79a8', '#ff9ff3', '#54a0ff'];
@@ -92,10 +123,23 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
     }, 6000);
   };
 
+  const handleCelebrate = () => {
+    createConfetti();
+    playBirthdaySong();
+  };
+
   const blowCandles = () => {
     setCandlesLit(false);
     createConfetti();
     setTimeout(() => setCandlesLit(true), 4000);
+  };
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
   };
 
   return (
@@ -236,11 +280,13 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
               </div>
               <div className="button-container">
                 <button 
-                  className="action-button confetti-btn"
-                  onClick={createConfetti}
+                  className={`action-button confetti-btn ${isPlaying ? 'pulse' : ''}`}
+                  onClick={handleCelebrate}
                 >
                   <span className="button-icon">✨</span>
-                  <span className="button-text">Celebrate!</span>
+                  <span className="button-text">
+                    {isPlaying ? 'Playing...' : 'Celebrate!'}
+                  </span>
                   <span className="button-icon">✨</span>
                   <div className="button-shine"></div>
                 </button>
@@ -254,6 +300,24 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
                   <div className="button-shine"></div>
                 </button>
               </div>
+              {isPlaying && (
+                <div className="volume-control">
+                  <span>🔈</span>
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.1" 
+                    value={volume}
+                    onChange={handleVolumeChange}
+                  />
+                </div>
+              )}
+              {isPlaying && (
+                <div className="music-note">
+                  🎵
+                </div>
+              )}
             </div>
             <div className="message-glow"></div>
           </div>
