@@ -7,8 +7,17 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
   const [showBalloons, setShowBalloons] = useState(false);
   const [candlesLit, setCandlesLit] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile device
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+
     setIsLoaded(true);
     const timer1 = setTimeout(() => setShowCake(true), 800);
     const timer2 = setTimeout(() => setShowMessage(true), 2000);
@@ -18,6 +27,7 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
+      window.removeEventListener('resize', checkIfMobile);
     };
   }, []);
 
@@ -35,10 +45,11 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       z-index: 1000;
     `;
 
-    for (let i = 0; i < 80; i++) {
+    const confettiCount = isMobile ? 50 : 80;
+    for (let i = 0; i < confettiCount; i++) {
       const confettiPiece = document.createElement('div');
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const size = Math.random() * 10 + 6;
+      const size = Math.random() * (isMobile ? 8 : 10) + 6;
       const startX = Math.random() * window.innerWidth;
       const duration = Math.random() * 3 + 2;
       const delay = Math.random() * 1;
@@ -59,7 +70,6 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       confettiContainer.appendChild(confettiPiece);
     }
 
-    // Add confetti fall keyframes
     const style = document.createElement('style');
     style.textContent = `
       @keyframes confettiFall {
@@ -99,7 +109,7 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       
       {/* Enhanced floating particles */}
       <div className="particles">
-        {[...Array(30)].map((_, i) => (
+        {[...Array(isMobile ? 20 : 30)].map((_, i) => (
           <div key={i} className={`particle particle-${i % 6}`}>
             <div className="particle-inner"></div>
           </div>
@@ -110,7 +120,15 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       {showBalloons && (
         <div className="balloons-container">
           {['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'gold', 'silver'].map((color, index) => (
-            <div key={color} className={`balloon balloon-${color}`} style={{ animationDelay: `${index * 0.2}s` }}>
+            <div 
+              key={color} 
+              className={`balloon balloon-${color}`} 
+              style={{ 
+                animationDelay: `${index * 0.2}s`,
+                width: isMobile ? '60px' : '80px',
+                height: isMobile ? '80px' : '100px'
+              }}
+            >
               <div className="balloon-highlight"></div>
               <div className="balloon-string"></div>
             </div>
@@ -122,22 +140,43 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
         {/* Enhanced Cake */}
         {showCake && (
           <div className="cake-container">
-            <div className="cake">
-              <div className="plate">
+            <div className="cake" style={{
+              width: isMobile ? '150px' : '200px',
+              height: isMobile ? '90px' : '120px'
+            }}>
+              <div className="plate" style={{
+                width: isMobile ? '180px' : '240px',
+                height: isMobile ? '25px' : '30px',
+                bottom: isMobile ? '-12px' : '-15px',
+                left: isMobile ? '-15px' : '-20px'
+              }}>
                 <div className="plate-shine"></div>
               </div>
               <div className="cake-base">
-                <div className="cake-layer layer-bottom">
+                <div className="cake-layer layer-bottom" style={{
+                  height: isMobile ? '40px' : '50px'
+                }}>
                   <div className="layer-decoration"></div>
                 </div>
-                <div className="cake-layer layer-middle">
+                <div className="cake-layer layer-middle" style={{
+                  height: isMobile ? '30px' : '40px',
+                  width: isMobile ? '85%' : '90%',
+                  bottom: isMobile ? '35px' : '45px'
+                }}>
                   <div className="layer-decoration"></div>
                 </div>
-                <div className="cake-layer layer-top">
+                <div className="cake-layer layer-top" style={{
+                  height: isMobile ? '25px' : '30px',
+                  width: isMobile ? '75%' : '80%',
+                  bottom: isMobile ? '65px' : '80px'
+                }}>
                   <div className="layer-decoration"></div>
                 </div>
               </div>
-              <div className="frosting">
+              <div className="frosting" style={{
+                width: isMobile ? '75%' : '80%',
+                bottom: isMobile ? '85px' : '105px'
+              }}>
                 <div className="frosting-swirl swirl-1"></div>
                 <div className="frosting-swirl swirl-2"></div>
                 <div className="frosting-swirl swirl-3"></div>
@@ -150,9 +189,14 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
                 <div className="decoration decoration-4"></div>
                 <div className="decoration decoration-5"></div>
               </div>
-              <div className="candles">
+              <div className="candles" style={{
+                bottom: isMobile ? '100px' : '120px'
+              }}>
                 {[1, 2, 3, 4, 5].map(num => (
-                  <div key={num} className={`candle candle-${num} ${candlesLit ? 'lit' : ''}`}>
+                  <div key={num} className={`candle candle-${num} ${candlesLit ? 'lit' : ''}`} style={{
+                    width: isMobile ? '10px' : '12px',
+                    height: isMobile ? '35px' : '40px'
+                  }}>
                     <div className="candle-body"></div>
                     <div className="wick"></div>
                     <div className="flame">
@@ -168,7 +212,10 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
         
         {/* Enhanced Message */}
         {showMessage && (
-          <div className="message-container">
+          <div className="message-container" style={{
+            padding: isMobile ? '20px' : '30px',
+            maxWidth: isMobile ? '90%' : '500px'
+          }}>
             <div className="message">
               <div className="title-wrapper">
                 <h1 className="birthday-title">
@@ -215,8 +262,14 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
       
       {/* Sparkles overlay */}
       <div className="sparkles">
-        {[...Array(12)].map((_, i) => (
-          <div key={i} className={`sparkle sparkle-${i}`}>⭐</div>
+        {[...Array(isMobile ? 8 : 12)].map((_, i) => (
+          <div 
+            key={i} 
+            className={`sparkle sparkle-${i}`}
+            style={{
+              fontSize: isMobile ? '16px' : '20px'
+            }}
+          >⭐</div>
         ))}
       </div>
     </div>
