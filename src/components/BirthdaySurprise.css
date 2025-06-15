@@ -2,7 +2,7 @@
 .surprise-container {
   position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
   font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', sans-serif;
   display: flex;
@@ -75,13 +75,6 @@
   animation: float 15s infinite ease-in-out;
 }
 
-.particle-0 { top: 10%; left: 20%; animation-delay: 0s; }
-.particle-1 { top: 70%; left: 80%; animation-delay: 2s; }
-.particle-2 { top: 30%; left: 50%; animation-delay: 4s; }
-.particle-3 { top: 60%; left: 10%; animation-delay: 6s; }
-.particle-4 { top: 20%; left: 90%; animation-delay: 8s; }
-.particle-5 { top: 80%; left: 30%; animation-delay: 10s; }
-
 @keyframes float {
   0%, 100% { transform: translateY(0) translateX(0); }
   25% { transform: translateY(-20px) translateX(10px); }
@@ -99,8 +92,6 @@
 
 .balloon {
   position: absolute;
-  width: 80px;
-  height: 100px;
   border-radius: 50%;
   animation: floatUp 8s ease-in infinite;
   z-index: 2;
@@ -121,8 +112,9 @@
   width: 2px;
   height: 80px;
   background: #333;
-  top: 100px;
-  left: 40px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   transform-origin: top;
   animation: sway 3s ease-in-out infinite alternate;
 }
@@ -143,8 +135,8 @@
 }
 
 @keyframes sway {
-  0% { transform: rotate(-5deg); }
-  100% { transform: rotate(5deg); }
+  0% { transform: translateX(-50%) rotate(-5deg); }
+  100% { transform: translateX(-50%) rotate(5deg); }
 }
 
 /* Content */
@@ -156,14 +148,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 800px;
   padding: 20px;
 }
 
 /* Cake */
 .cake-container {
   position: relative;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   transform: scale(0);
   animation: scaleIn 0.8s ease-out forwards;
   animation-delay: 0.5s;
@@ -177,18 +168,12 @@
 
 .cake {
   position: relative;
-  width: 200px;
-  height: 120px;
 }
 
 .plate {
   position: absolute;
-  width: 240px;
-  height: 30px;
   background: #f5f5f5;
   border-radius: 50%;
-  bottom: -15px;
-  left: -20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -216,24 +201,17 @@
 }
 
 .layer-bottom {
-  height: 50px;
   background: linear-gradient(to bottom, #f8c8dc, #f5a6c9);
   bottom: 0;
 }
 
 .layer-middle {
-  height: 40px;
   background: linear-gradient(to bottom, #f5a6c9, #f184b6);
-  bottom: 45px;
-  width: 90%;
   left: 5%;
 }
 
 .layer-top {
-  height: 30px;
   background: linear-gradient(to bottom, #f184b6, #ee6fa9);
-  bottom: 80px;
-  width: 80%;
   left: 10%;
 }
 
@@ -250,13 +228,10 @@
 
 .frosting {
   position: absolute;
-  width: 80%;
-  height: 20px;
   background: #fff;
   border-radius: 10px;
-  bottom: 105px;
-  left: 10%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  left: 10%;
 }
 
 .frosting-swirl {
@@ -285,10 +260,9 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #f9ca24;
 }
 
-.decoration-1 { top: 0; left: 15%; }
+.decoration-1 { top: 0; left: 15%; background: #f9ca24; }
 .decoration-2 { top: 0; left: 35%; background: #a55eea; }
 .decoration-3 { top: 0; left: 55%; background: #26de81; }
 .decoration-4 { top: 0; left: 75%; background: #54a0ff; }
@@ -297,8 +271,6 @@
 .candles {
   position: absolute;
   width: 100%;
-  height: 40px;
-  bottom: 120px;
   display: flex;
   justify-content: space-around;
   padding: 0 20px;
@@ -306,8 +278,6 @@
 
 .candle {
   position: relative;
-  width: 12px;
-  height: 40px;
   background: linear-gradient(to right, #f5f5f5, #e0e0e0, #f5f5f5);
   border-radius: 3px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -327,7 +297,8 @@
   height: 8px;
   background: #333;
   top: -8px;
-  left: 5px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .flame {
@@ -337,9 +308,10 @@
   background: #ff9d00;
   border-radius: 50% 50% 20% 20%;
   top: -23px;
-  left: 1px;
+  left: 50%;
+  transform: translateX(-50%);
   opacity: 0;
-  transform: scale(0);
+  transform: scale(0) translateX(-50%);
   filter: blur(1px);
   animation: flicker 2s ease-in-out infinite alternate;
 }
@@ -362,21 +334,22 @@
   background: rgba(255, 200, 0, 0.3);
   border-radius: 50%;
   top: -15px;
-  left: -9px;
+  left: 50%;
+  transform: translateX(-50%);
   opacity: 0;
 }
 
 .candle.lit .flame,
 .candle.lit .candle-glow {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateX(-50%);
 }
 
 @keyframes flicker {
-  0%, 100% { transform: scale(1) translateY(0) rotate(0deg); }
-  25% { transform: scale(1.05) translateY(-1px) rotate(1deg); }
-  50% { transform: scale(0.95) translateY(1px) rotate(-1deg); }
-  75% { transform: scale(1.02) translateY(-0.5px) rotate(0.5deg); }
+  0%, 100% { transform: scale(1) translateY(0) translateX(-50%) rotate(0deg); }
+  25% { transform: scale(1.05) translateY(-1px) translateX(-50%) rotate(1deg); }
+  50% { transform: scale(0.95) translateY(1px) translateX(-50%) rotate(-1deg); }
+  75% { transform: scale(1.02) translateY(-0.5px) translateX(-50%) rotate(0.5deg); }
 }
 
 /* Message */
@@ -384,13 +357,11 @@
   position: relative;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
-  padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   transform: translateY(20px);
   opacity: 0;
   animation: fadeInUp 1s ease-out forwards;
   animation-delay: 1s;
-  max-width: 500px;
   text-align: center;
   z-index: 5;
 }
@@ -412,22 +383,23 @@
 }
 
 .title-wrapper {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .birthday-title {
-  font-size: 2.2rem;
+  font-size: 2rem;
   color: #d6336c;
   margin: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  gap: 5px;
 }
 
 .emoji-left, .emoji-right {
-  font-size: 1.8rem;
-  margin: 0 10px;
+  font-size: 1.5rem;
   animation: bounce 2s infinite;
 }
 
@@ -441,7 +413,7 @@
 }
 
 .title-underline {
-  width: 100px;
+  width: 80px;
   height: 4px;
   background: linear-gradient(to right, #ff6b6b, #a55eea, #54a0ff);
   border-radius: 2px;
@@ -451,32 +423,32 @@
 
 @keyframes underlineGrow {
   0% { width: 0; opacity: 0; }
-  100% { width: 100px; opacity: 1; }
+  100% { width: 80px; opacity: 1; }
 }
 
 .birthday-wish {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #555;
   line-height: 1.6;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .wish-accent {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 8px;
   font-weight: bold;
   color: #d6336c;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .signature {
-  margin: 20px 0;
+  margin: 15px 0;
   font-style: italic;
   color: #666;
 }
 
 .sender-name {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #a55eea;
   margin-top: 5px;
@@ -485,16 +457,16 @@
 .button-container {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .action-button {
   position: relative;
-  padding: 12px 25px;
+  padding: 10px 20px;
   border: none;
   border-radius: 50px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -502,12 +474,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
 }
 
 .action-button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .action-button:active {
@@ -525,8 +498,8 @@
 }
 
 .button-icon {
-  margin: 0 8px;
-  font-size: 1.2rem;
+  margin: 0 6px;
+  font-size: 1rem;
 }
 
 .button-shine {
@@ -555,38 +528,84 @@
 
 .sparkle {
   position: absolute;
-  font-size: 1.5rem;
   opacity: 0;
   animation: sparkleTwinkle 3s infinite;
 }
-
-.sparkle-0 { top: 10%; left: 15%; animation-delay: 0s; }
-.sparkle-1 { top: 20%; left: 80%; animation-delay: 0.5s; }
-.sparkle-2 { top: 70%; left: 20%; animation-delay: 1s; }
-.sparkle-3 { top: 30%; left: 60%; animation-delay: 1.5s; }
-.sparkle-4 { top: 80%; left: 50%; animation-delay: 2s; }
-.sparkle-5 { top: 60%; left: 70%; animation-delay: 2.5s; }
-.sparkle-6 { top: 40%; left: 30%; animation-delay: 0.3s; }
-.sparkle-7 { top: 90%; left: 10%; animation-delay: 0.8s; }
-.sparkle-8 { top: 15%; left: 40%; animation-delay: 1.3s; }
-.sparkle-9 { top: 75%; left: 90%; animation-delay: 1.8s; }
-.sparkle-10 { top: 25%; left: 25%; animation-delay: 2.3s; }
-.sparkle-11 { top: 85%; left: 75%; animation-delay: 2.8s; }
 
 @keyframes sparkleTwinkle {
   0%, 100% { opacity: 0; transform: scale(0.5); }
   50% { opacity: 1; transform: scale(1.2); }
 }
 
-/* Responsive adjustments */
+/* Mobile-specific styles */
 @media (max-width: 768px) {
   .birthday-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     flex-direction: column;
+    gap: 0;
   }
   
   .emoji-left, .emoji-right {
     margin: 5px 0;
+  }
+  
+  .birthday-wish {
+    font-size: 0.9rem;
+  }
+  
+  .wish-accent {
+    font-size: 1rem;
+  }
+  
+  .sender-name {
+    font-size: 1.1rem;
+  }
+  
+  .action-button {
+    padding: 8px 15px;
+    font-size: 0.8rem;
+    min-width: 100px;
+  }
+  
+  .button-icon {
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust cake decorations for mobile */
+  .decoration {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .decoration-1 { left: 10%; }
+  .decoration-2 { left: 30%; }
+  .decoration-3 { left: 50%; }
+  .decoration-4 { left: 70%; }
+  .decoration-5 { left: 90%; }
+  
+  /* Reduce particle count */
+  .particle {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Very small devices (phones, 400px and down) */
+@media (max-width: 400px) {
+  .birthday-title {
+    font-size: 1.4rem;
+  }
+  
+  .birthday-wish {
+    font-size: 0.8rem;
+  }
+  
+  .signature {
+    font-size: 0.9rem;
+  }
+  
+  .sender-name {
+    font-size: 1rem;
   }
   
   .button-container {
@@ -596,7 +615,6 @@
   
   .action-button {
     width: 100%;
-    max-width: 250px;
-    margin-bottom: 10px;
+    max-width: 160px;
   }
 }
