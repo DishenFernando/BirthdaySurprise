@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './BirthdaySurprise.css';
 
-const BirthdaySurprise = () => {
+const BirthdaySurprise = ({ celebrantName, senderName }) => {
   const [showCake, setShowCake] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showBalloons, setShowBalloons] = useState(false);
@@ -109,7 +109,7 @@ const BirthdaySurprise = () => {
       {/* Balloons */}
       {showBalloons && (
         <div className="balloons-container">
-          {['red', 'blue', 'yellow', 'green', 'purple', 'pink'].map((color, index) => (
+          {['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'gold', 'silver'].map((color, index) => (
             <div key={color} className={`balloon balloon-${color}`} style={{ animationDelay: `${index * 0.2}s` }}>
               <div className="balloon-highlight"></div>
               <div className="balloon-string"></div>
@@ -173,7 +173,7 @@ const BirthdaySurprise = () => {
               <div className="title-wrapper">
                 <h1 className="birthday-title">
                   <span className="emoji-left">🎉</span>
-                  <span className="title-text">Happy Birthday!</span>
+                  <span className="title-text">Happy Birthday, {celebrantName}!</span>
                   <span className="emoji-right">🎉</span>
                 </h1>
                 <div className="title-underline"></div>
@@ -183,6 +183,10 @@ const BirthdaySurprise = () => {
                 <br />
                 <span className="wish-accent">Make a wish and blow out the candles! ✨</span>
               </p>
+              <div className="signature">
+                <p>With love,</p>
+                <p className="sender-name">{senderName}</p>
+              </div>
               <div className="button-container">
                 <button 
                   className="action-button confetti-btn"
