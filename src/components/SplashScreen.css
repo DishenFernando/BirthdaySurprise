@@ -260,7 +260,7 @@
 /* Text */
 .splash-text {
   font-size: 1.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color:blueviolet;
   margin-bottom: 40px;
   display: flex;
   flex-wrap: wrap;
