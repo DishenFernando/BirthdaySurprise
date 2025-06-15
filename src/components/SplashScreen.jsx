@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './SplashScreen.css';
+import countdownSound from './assets/tick-sound.mp3'; // Import from components/assets
 
 const SplashScreen = ({ onFinish }) => {
   const [countdown, setCountdown] = useState(5);
@@ -13,7 +14,13 @@ const SplashScreen = ({ onFinish }) => {
     countdown: false
   });
 
+  const audioRef = useRef(null);
+
   useEffect(() => {
+    // Initialize audio
+    audioRef.current = new Audio(countdownSound);
+    audioRef.current.volume = 0.3; // Set to comfortable volume
+
     // Check if mobile device
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -39,6 +46,13 @@ const SplashScreen = ({ onFinish }) => {
           setTimeout(() => onFinish(), 800);
           return 0;
         }
+        
+        // Play countdown sound on each number change
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0; // Reset to start
+          audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+        }
+        
         return prev - 1;
       });
     }, 1000);
@@ -47,6 +61,10 @@ const SplashScreen = ({ onFinish }) => {
       clearInterval(timer);
       timers.forEach(timer => clearTimeout(timer));
       window.removeEventListener('resize', checkIfMobile);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, [onFinish]);
 
@@ -72,14 +90,14 @@ const SplashScreen = ({ onFinish }) => {
 
   return (
     <div className={`splash-container ${!isVisible ? 'fade-out' : ''}`}>
-      {/* Gradient background with animated layers */}
+      {/* Animated background */}
       <div className="background-animation">
         <div className="bg-layer layer-1"></div>
         <div className="bg-layer layer-2"></div>
         <div className="bg-layer layer-3"></div>
       </div>
       
-      {/* Floating abstract shapes - reduced on mobile */}
+      {/* Floating abstract shapes */}
       <div className="floating-shapes">
         {[...Array(isMobile ? 5 : 8)].map((_, i) => (
           <div 
