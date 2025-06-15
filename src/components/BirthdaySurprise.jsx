@@ -2,7 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import './BirthdaySurprise.css';
 import happyBirthdaySong from './assets/happy-birthday.mp3';
 
-const BirthdaySurprise = ({ celebrantName, senderName }) => {
+const BirthdaySurprise = () => {
+  // Names hardcoded as requested
+  const celebrantName = "Babi";
+  const senderName = "Puli";
+
+  // Animation states
   const [showCake, setShowCake] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showBalloons, setShowBalloons] = useState(false);
@@ -42,7 +47,7 @@ const BirthdaySurprise = ({ celebrantName, senderName }) => {
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [volume]);
 
   const playBirthdaySong = () => {
     if (audioRef.current) {
