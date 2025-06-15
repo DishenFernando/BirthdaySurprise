@@ -5,10 +5,22 @@ const SplashScreen = ({ onFinish }) => {
   const [countdown, setCountdown] = useState(5);
   const [isVisible, setIsVisible] = useState(true);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [showElements, setShowElements] = useState({
+    logo: false,
+    title: false,
+    text: false,
+    countdown: false
+  });
 
   useEffect(() => {
-    // Show sparkles after a short delay
-    const sparkleTimer = setTimeout(() => setShowSparkles(true), 500);
+    // Staggered element animations
+    const timers = [
+      setTimeout(() => setShowElements(prev => ({...prev, logo: true})), 200),
+      setTimeout(() => setShowElements(prev => ({...prev, title: true})), 400),
+      setTimeout(() => setShowElements(prev => ({...prev, text: true})), 600),
+      setTimeout(() => setShowElements(prev => ({...prev, countdown: true})), 800),
+      setTimeout(() => setShowSparkles(true), 500)
+    ];
 
     const timer = setInterval(() => {
       setCountdown(prev => {
@@ -24,12 +36,12 @@ const SplashScreen = ({ onFinish }) => {
 
     return () => {
       clearInterval(timer);
-      clearTimeout(sparkleTimer);
+      timers.forEach(timer => clearTimeout(timer));
     };
   }, [onFinish]);
 
   const generateSparkles = () => {
-    return [...Array(15)].map((_, i) => (
+    return [...Array(25)].map((_, i) => (
       <div
         key={i}
         className={`sparkle sparkle-${i + 1}`}
@@ -37,28 +49,40 @@ const SplashScreen = ({ onFinish }) => {
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
           animationDelay: `${Math.random() * 2}s`,
-          animationDuration: `${2 + Math.random() * 2}s`
+          animationDuration: `${1 + Math.random() * 2}s`,
+          fontSize: `${12 + Math.random() * 12}px`,
+          opacity: 0.7 + Math.random() * 0.3
         }}
       >
-        ✨
+        {['✨', '⭐', '🌟', '⚡', '💫'][Math.floor(Math.random() * 5)]}
       </div>
     ));
   };
 
   return (
     <div className={`splash-container ${!isVisible ? 'fade-out' : ''}`}>
-      <div className="background-gradient"></div>
+      {/* Gradient background with animated layers */}
+      <div className="background-animation">
+        <div className="bg-layer layer-1"></div>
+        <div className="bg-layer layer-2"></div>
+        <div className="bg-layer layer-3"></div>
+      </div>
       
-      {/* Animated background shapes */}
+      {/* Floating abstract shapes */}
       <div className="floating-shapes">
-        <div className="shape shape-1"></div>
-        <div className="shape shape-2"></div>
-        <div className="shape shape-3"></div>
-        <div className="shape shape-4"></div>
-        <div className="shape shape-5"></div>
+        {[...Array(8)].map((_, i) => (
+          <div 
+            key={i}
+            className={`shape shape-${i + 1}`}
+            style={{
+              animationDuration: `${15 + Math.random() * 10}s`,
+              animationDelay: `${Math.random() * 5}s`
+            }}
+          ></div>
+        ))}
       </div>
 
-      {/* Sparkles */}
+      {/* Dynamic sparkles */}
       {showSparkles && (
         <div className="sparkles-container">
           {generateSparkles()}
@@ -66,42 +90,59 @@ const SplashScreen = ({ onFinish }) => {
       )}
 
       <div className="splash-content">
-        <div className="logo-container">
-          <div className="birthday-icon">🎂</div>
+        {/* Animated logo */}
+        <div className={`logo-container ${showElements.logo ? 'show' : ''}`}>
+          <div className="birthday-icon">
+            <div className="icon-inner">🎂</div>
+            <div className="icon-glow"></div>
+          </div>
         </div>
         
+        {/* Staggered title animation */}
         <h1 className="splash-title">
-          <span className="title-word">Birthday</span>
-          <span className="title-word">Surprise!</span>
+          <span className={`title-word ${showElements.title ? 'show' : ''}`}>
+            <span className="word-inner">Birthday</span>
+          </span>
+          <span className={`title-word ${showElements.title ? 'show' : ''}`} style={{ transitionDelay: '0.1s' }}>
+            <span className="word-inner">Surprise!</span>
+          </span>
         </h1>
         
-        <p className="splash-text">
+        {/* Animated text */}
+        <div className={`splash-text ${showElements.text ? 'show' : ''}`}>
           <span className="text-line">Get ready for something</span>
-          <span className="text-highlight">magical</span>
-          <span className="text-dots">
-            <span className="dot">.</span>
-            <span className="dot">.</span>
-            <span className="dot">.</span>
+          <span className="text-highlight">
+            <span className="highlight-inner">magical</span>
           </span>
-        </p>
+          <span className="text-dots">
+            {[...Array(3)].map((_, i) => (
+              <span 
+                key={i} 
+                className="dot" 
+                style={{ animationDelay: `${i * 0.2}s` }}
+              >.</span>
+            ))}
+          </span>
+        </div>
         
-        <div className="countdown-container">
+        {/* Countdown with circular progress */}
+        <div className={`countdown-container ${showElements.countdown ? 'show' : ''}`}>
           <div className="countdown-circle">
-            <svg className="progress-ring" width="120" height="120">
+            <svg className="progress-ring" width="140" height="140">
               <circle
                 className="progress-ring-background"
-                cx="60"
-                cy="60"
-                r="50"
+                cx="70"
+                cy="70"
+                r="60"
               />
               <circle
                 className="progress-ring-progress"
-                cx="60"
-                cy="60"
-                r="50"
+                cx="70"
+                cy="70"
+                r="60"
                 style={{
-                  strokeDasharray: `${2 * Math.PI * 50}`,
-                  strokeDashoffset: `${2 * Math.PI * 50 * (countdown / 5)}`
+                  strokeDasharray: `${2 * Math.PI * 60}`,
+                  strokeDashoffset: `${2 * Math.PI * 60 * (countdown / 5)}`
                 }}
               />
             </svg>
@@ -111,25 +152,35 @@ const SplashScreen = ({ onFinish }) => {
                 {countdown === 1 ? 'second' : 'seconds'}
               </span>
             </div>
+            <div className="countdown-glow"></div>
           </div>
         </div>
 
+        {/* Loading bar */}
         <div className="loading-bar">
           <div 
             className="loading-fill"
             style={{ width: `${((5 - countdown) / 5) * 100}%` }}
           ></div>
+          <div className="loading-glow"></div>
         </div>
       </div>
 
-      {/* Celebration emojis */}
+      {/* Floating celebration emojis */}
       <div className="celebration-emojis">
-        <span className="emoji emoji-1">🎉</span>
-        <span className="emoji emoji-2">🎈</span>
-        <span className="emoji emoji-3">🎊</span>
-        <span className="emoji emoji-4">🎁</span>
-        <span className="emoji emoji-5">🌟</span>
-        <span className="emoji emoji-6">🎵</span>
+        {['🎉', '🎈', '🎊', '🎁', '🌟', '🎵', '🥳', '🎀'].map((emoji, i) => (
+          <span 
+            key={i}
+            className={`emoji emoji-${i + 1}`}
+            style={{
+              animationDuration: `${8 + Math.random() * 10}s`,
+              animationDelay: `${Math.random() * 2}s`,
+              fontSize: `${24 + Math.random() * 16}px`
+            }}
+          >
+            {emoji}
+          </span>
+        ))}
       </div>
     </div>
   );
